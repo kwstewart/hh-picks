@@ -1,0 +1,150 @@
+{
+    "rest": {
+        "name": "game",
+        "parameters": [
+            "id"
+        ]
+    },
+    "app": "games",
+    "controller": "game",
+    "database": "picks",
+    "table": "games",
+    "whereField": "id",
+    "fields": [
+        {
+            "name": "id",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": true,
+            "autoInc": true,
+            "public": true,
+            "system": true,
+            "index": "primary",
+            "foreignKey": {},
+            "foreignKeys": [
+                {
+                    "controllerName": "score",
+                    "tableName": "scores",
+                    "fieldName": "gameId",
+                    "single": true,
+                    "databaseName": "picks"
+                },
+                {
+                    "controllerName": "pick",
+                    "tableName": "picks",
+                    "fieldName": "gameId",
+                    "single": false,
+                    "databaseName": "picks"
+                }
+            ]
+        },
+        {
+            "name": "awayTeamId",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "index_games_awayTeamId",
+            "foreignKey": {
+                "tableName": "teams",
+                "fieldName": "id",
+                "databaseName": "picks"
+            },
+            "foreignKeys": []
+        },
+        {
+            "name": "homeTeamId",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "index_games_homeTeamId",
+            "foreignKey": {
+                "tableName": "teams",
+                "fieldName": "id",
+                "databaseName": "picks"
+            },
+            "foreignKeys": []
+        },
+        {
+            "name": "winningTeamId",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "index_games_winningTeamId",
+            "foreignKey": {
+                "tableName": "teams",
+                "fieldName": "id",
+                "databaseName": "picks"
+            },
+            "foreignKeys": []
+        },
+        {
+            "name": "venueId",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "index_games_venueId",
+            "foreignKey": {
+                "tableName": "venues",
+                "fieldName": "id",
+                "databaseName": "picks"
+            },
+            "foreignKeys": []
+        },
+        {
+            "name": "startTime",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": false,
+            "foreignKey": {},
+            "foreignKeys": []
+        },
+        {
+            "name": "week",
+            "type": "varchar",
+            "length": 8,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "index_games_week",
+            "foreignKey": {},
+            "foreignKeys": []
+        },
+        {
+            "name": "year",
+            "type": "int",
+            "length": 4,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "index_games_year",
+            "foreignKey": {},
+            "foreignKeys": []
+        }
+    ]
+}

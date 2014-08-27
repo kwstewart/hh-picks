@@ -1,0 +1,97 @@
+{
+    "rest": {
+        "name": "pick",
+        "parameters": [
+            "gameId",
+            "id"
+        ]
+    },
+    "app": "games",
+    "controller": "pick",
+    "database": "picks",
+    "table": "picks",
+    "whereField": "id",
+    "fields": [
+        {
+            "name": "id",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": true,
+            "autoInc": true,
+            "public": true,
+            "system": true,
+            "index": "primary",
+            "foreignKey": {},
+            "foreignKeys": []
+        },
+        {
+            "name": "gameId",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "index_picks_gameId",
+            "foreignKey": {
+                "tableName": "games",
+                "fieldName": "id",
+                "databaseName": "picks"
+            },
+            "foreignKeys": []
+        },
+        {
+            "name": "teamId",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": false,
+            "index": "index_picks_teamId",
+            "foreignKey": {
+                "tableName": "teams",
+                "fieldName": "id",
+                "databaseName": "picks"
+            },
+            "foreignKeys": []
+        },
+        {
+            "name": "userId",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "index_picks_userId",
+            "foreignKey": {
+                "tableName": "users",
+                "fieldName": "id",
+                "databaseName": "source"
+            },
+            "foreignKeys": [],
+            "currentUser": [
+                "post",
+                "put"
+            ]
+        },
+        {
+            "name": "score",
+            "type": "int",
+            "length": 4,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": false,
+            "index": false,
+            "foreignKey": {},
+            "foreignKeys": []
+        }
+    ]
+}

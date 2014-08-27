@@ -1,0 +1,125 @@
+/* **** Team Colors **** */
+.team-1  { background-color:#B10339; border-color:#FFC40D; }
+.team-2  { background-color:#000000; border-color:#CB041C; }
+.team-3  { background-color:#2B025B; border-color:#F5A329; }
+.team-4  { background-color:#00133F; border-color:#EE2F2B; }
+.team-5  { background-color:#0097C6; border-color:#101B24; }
+.team-6  { background-color:#00133F; border-color:#FF652B; }
+.team-7  { background-color:#FF2700; border-color:#101B24; }
+.team-8  { background-color:#4C230E; border-color:#FF652B; }
+.team-9  { background-color:#002E4D; border-color:#FFFFFF; }
+.team-10 { background-color:#002E4D; border-color:#FF652B; }
+.team-11 { background-color:#006EA1; border-color:#F6F6F6; }
+.team-12 { background-color:#294239; border-color:#FFBF00; }
+.team-13 { background-color:#00133F; border-color:#D6303A; }
+.team-14 { background-color:#00417E; border-color:#FFFFFF; }
+.team-15 { background-color:#00839C; border-color:#101B24; }
+.team-16 { background-color:#C60024; border-color:#000000; }
+.team-17 { background-color:#006B79; border-color:#FF642A; }
+.team-18 { background-color:#240A67; border-color:#FFAC2C; }
+.team-19 { background-color:#00295B; border-color:#EE2F2B; }
+.team-20 { background-color:#C6A876; border-color:#000B17; }
+.team-21 { background-color:#003155; border-color:#FFFFFF; }
+.team-22 { background-color:#174032; border-color:#FFFFFF; }
+.team-23 { background-color:#000000; border-color:#B5BBBD; }
+.team-24 { background-color:#002F30; border-color:#FFFFFF; }
+.team-25 { background-color:#000000; border-color:#FFBF00; }
+.team-26 { background-color:#05173C; border-color:#0F83B8; }
+.team-27 { background-color:#940029; border-color:#D99E77; }
+.team-28 { background-color:#030F1F; border-color:#283E67; }
+.team-29 { background-color:#00295B; border-color:#C1A05B; }
+.team-30 { background-color:#665C50; border-color:#D6303A; }
+.team-31 { background-color:#002C4B; border-color:#EE2F2B; }
+.team-32 { background-color:#8C001A; border-color:#FFBF00; }
+
+.games-body { color:#000; margin:30px; overflow:auto; }
+
+/* **** Header **** */
+#header { background:url("../img/transparent-67.png"); color:#fff; height:35px; width:100%; }
+#header-welcome { float:left; margin:7px 10px; }
+.header-link { -moz-border-radius:7px; -webkit-border-radius:7px; background-color:#fff; border-radius:7px; color:#333; padding:4px; text-decoration:none; }
+
+#header-logout { float:right; margin:7px 10px; }
+/*
+#header-left, #header-right { background:url("../img/football.png") no-repeat scroll 0 0 transparent; float:left; height:100px; width:81px; }
+#header-right { background-position:-88px 0; }
+#header-middle { background:url("../img/football-slice.png") repeat scroll 0 0 transparent; float:left; height:100px; }
+*/
+#header ul { float:left; list-style:none; margin-top:0; padding-top:7px; }
+#header li { float:left; margin-right:10px; }
+
+/* **** Home **** */
+.home-alert { border:1px solid #000; border-radius:10px; margin-left:10px; padding:10px; width:500px; }
+
+
+/* **** Games - Weekly View **** */
+.games-week-wrap { margin:0 auto; width:80%; }
+.games-week-box { -moz-border-radius:10px; -webkit-border-radius:10px; background-color:#ddd; border:4px solid #000; border-radius:10px; float:left; height:240px; margin:2px; position:relative; width:240px; }
+.games-week-unpicked { border-color:#ff0; }
+.games-week-date { margin-top:10px; text-align:center; text-decoration:underline; width:100%; }
+.games-week-away, .games-week-home { float:left; margin:4px; padding:3px 1px; text-align:center; width:98px; }
+.games-week-home { float:right; }
+.games-week-vs { float:left; margin-left:7px; margin-top:45px; }
+.games-week-helmet { clear:both; width:75px; }
+.games-week-abbr { float:left; width:100%; }
+.games-week-record { clear:both; float:left; width:100px; }
+.games-week-bar-wrap { background-color:transparent; border-width:1px; border-style:solid; clear:both; float:left; height:10px; margin-top:5px; width:100px; }
+.games-week-away-bar, .games-week-home-bar { float:left; height:10px; width:50px; }
+.games-week-away-bar { float:right; }
+.games-week-checkbox, .games-week-mypick { background:url('../img/checkbox.png'); clear:both; cursor:pointer; float:left; height:100px; width:100px; }
+.games-week-checkbox:hover { background-position:-202px 0; }
+.games-week-mypick { background-position:-100px 0; }
+
+.games-week-overlay, .games-week-overlay-locked, .games-week-overlay-correct, .games-week-overlay-wrong { -moz-border-radius:10px; -webkit-border-radius:10px;  border-radius:10px; display:none; height:100%; opacity:0.7; position:absolute; width:100%; z-index:1; }
+.games-week-overlay-locked, .games-week-overlay-correct, .games-week-overlay-wrong { background:url('../img/picks-overlay.png'); display:block; }
+.games-week-overlay-correct { background-position:-250px 0; }
+.games-week-overlay-wrong { background-position:-500px 0; }
+.games-week-score { bottom: 26px; height:55px; left: 94px; position: absolute; width: 55px; }
+.games-week-score input { background-color: #FFFFFF; color:#000000; font-size:26px; height:100%; text-align:center; width:100%; }
+
+/* **** Picks Grid **** */
+.picks-grid { }
+#picks-grid-week-banner { text-align:center; }
+.picks-grid-row-start { float:left; color:#ffffff; width:60px; }
+.picks-grid-week-num { float:left; width:60px; padding:2px; }
+.picks-grid-week-num a { }
+.picks-grid-scores { clear:both; color:#fff; }
+.picks-grid-score { -moz-border-radius:5px; -webkit-border-radius:5px; border:1px solid #000; background-color:#ddd; border-radius:5px; float:left; padding:2px; text-align:center; width:60px; color:#000; position:relative; }
+.picks-grid-game-progress { background-color: #FFC001; border-radius: 5px 5px 5px 5px; height: 100%; left: 0; opacity: 0.6; position: absolute; top: 0; }
+.picks-grid-matchup img { width: 30px; }
+img.picks-grid-matchup-winner { background-color:#45fd1b; } 
+.picks-grid-header-game-box { float:left; width:60px; }
+.picks-grid-me { }
+.picks-grid-user { clear:both; }
+.picks-grid-user-box { -moz-border-radius:5px; -webkit-border-radius:5px; border:1px solid #000; background-color:#ddd; border-radius:5px; float:left; padding:2px; text-align:center; width:60px; }
+.picks-grid-header-game-box { float:left; padding:3px; text-align:center; width:60px; }
+.picks-grid-game { -moz-border-radius:5px; -webkit-border-radius:5px; border:1px solid #000; background-color:#ddd; border-radius:5px; float:left; padding:2px; text-align:center; width:60px; height:48px; }
+.picks-grid-matchup { font-size:10px; margin-top:2px; }
+
+
+.picks-grid-game-overlay { }
+.picks-grid-game-helmet { width:50px; }
+.picks-grid-game-locked { background-color:#ffc001; }
+.picks-grid-game-correct { background-color:#45fd1b; }
+.picks-grid-game-wrong { background-color:#ff0000; }
+.picks-grid-game-winning { background: linear-gradient(to right, #ffc001, #45fd1b); }
+.picks-grid-game-losing { background: linear-gradient(to right, #ffc001, #ff0000); }
+
+
+/* **** Utility Stuff **** */
+.flip-horizontal {
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: fliph; /*IE*/
+}
+.flip-vertical {
+    -moz-transform: scaleY(-1);
+    -webkit-transform: scaleY(-1);
+    -o-transform: scaleY(-1);
+    transform: scaleY(-1);
+    filter: flipv; /*IE*/
+}
+
+.source-bar-clear { padding-bottom:30px; }

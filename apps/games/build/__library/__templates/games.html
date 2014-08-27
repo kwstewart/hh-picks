@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>  
+<link rel="stylesheet" href="<?php echo BASE_URI; ?>/__static/css/global.css">
+<link rel="stylesheet" href="<?php echo BASE_URI; ?>/__static/css/source.css">
+<link rel="stylesheet" href="<?php echo BASE_APP_URI; ?>/games/<?php echo APP_BUILD_DIR ?>__static/css/games.css">
+
+</head>
+<body class="games-body">
+  <div class="games-wrap">
+<?php
+	
+	$gameControl = getApiController("games","game");
+	$pickControl = getApiController("games","pick");
+	
+	$season = 2013;
+	
+	
+	$week = $gameControl->xDB->getRecord("season","week");
+	
+	//$week = "REG4";
+	
+	// Get all the games for the week
+	$games = $gameControl->get(array("formatted" => false, "__data" => array("week" => $week, "year" => $season)));
+	
+	// Get all the picks for the user for this week, by gameId
+	$picks = $pickControl->xDB->query("SELECT id, teamId, gameId, score FROM picks WHERE userId = ".$pickControl->me->id." AND gameId IN (SELECT id FROM games WHERE year = ".$season." AND week = '".$week."')","gameId");
+	
+	// Get all the abbreviations, by teamId
+	$abbrs = $pickControl->xDB->query("SELECT id, abbr FROM teams","id");
+	
+	// Get records for each team
+	$records = $gameControl->xDB->query("SELECT * FROM records WHERE season = ".$season, "teamId"); 	
+	
+	
+	$html = "";
+	
+	$html .= "WEEK ".$week;
+	
+	
+	$html .= "<div class='games-week-wrap'>";
+	foreach($games as $gameIndex => $gameInfo) {
+		
+		$overlayClass = "";
+		
+		if(0) {
+		if(time() < $gameInfo['startTime']) $overlayClass = "";
+		elseif($gameInfo['winningTeamId'] == null) $overlayClass = "games-week-overlay-locked";
+		elseif($gameInfo['winningTeamId'] == @$picks[$gameInfo['id']]['teamId']) $overlayClass = "games-week-overlay-correct";
+		else $overlayClass = "games-week-overlay-wrong";
+	  }
+		
+		$html .= "<div class='games-week-box ".(@$picks[$gameInfo['id']]['teamId'] ? "" : " games-week-unpicked")."' id='gameId-".$gameInfo['id']."' data-gameId='".$gameInfo['id']."' data-pickId='".@$picks[$gameInfo['id']]['id']."'>";
+		$html .= "<div class='games-week-overlay $overlayClass' ></div>";
+		$html .= "<div class='games-week-date'>".date("m/d/y h:i",$gameInfo['startTime'])."</div>";
+		$html .= "<div class='games-week-away' id='teamId-".$gameInfo['awayTeamId']."'>";
+		$html .= "<div class='games-week-abbr'>".$abbrs[$gameInfo['awayTeamId']]['abbr']."</div>";
+		$html .= "<img class='games-week-helmet' src='/apps/games/build/__static/img/helmets/".$gameInfo['awayTeamId']."_medium.png'>";
+		$html .= "<div class='games-week-record'>".$records[$gameInfo['awayTeamId']]['wins']." - ".$records[$gameInfo['awayTeamId']]['losses']." - "."0"."</div>";
+		//$html .= "<div class='games-week-bar-wrap team-".$gameInfo['awayTeamId']."' title='".($gamePicks[$gameInfo['awayTeamId']] == 1 ? "1 person has" : $gamePicks[$gameInfo['awayTeamId']]." people have")." picked the ".$gameInfo['away']."'>";
+		//$html .= "<div class='games-week-away-bar team-".$gameInfo['awayTeamId']."' style='width:".@($gamePicks[$gameInfo['awayTeamId']] / array_sum($gamePicks) * 100)."px'></div>";
+		//$html .= "</div>";
+		$html .= "<a class='".(@$picks[$gameInfo['id']]['teamId'] == $gameInfo['awayTeamId'] ? "games-week-mypick" : "games-week-checkbox")."' href='#' onclick='SRC.Games.submitPick(".$gameInfo['id'].",".$gameInfo['awayTeamId'].(@$use_pid ? ",".$use_pid : "")."); return false;'></a>";
+		$html .= "</div>";
+		
+		$html .= "<div class='games-week-vs'>@</div>";
+		
+		// The last game should have a score box
+		if(count($games) == $gameIndex + 1) $html .= "<div class='games-week-score' ><input title='".json_encode(@$picks[$gameInfo['id']])."' type='text' id='score-gameId-".$gameInfo['id']."' value='".@$picks[$gameInfo['id']]['score']."' onblur='SRC.Games.submitScore(".$gameInfo['id'].",this.value)' /></div>";
+		
+		$html .= "<div class='games-week-home' id='teamId-".$gameInfo['homeTeamId']."'>";
+		$html .= "<div class='games-week-abbr'>".$abbrs[$gameInfo['homeTeamId']]['abbr']."</div>";		
+		$html .= "<img class='games-week-helmet' src='/apps/games/build/__static/img/helmets/".$gameInfo['homeTeamId']."_medium.png'>";
+		$html .= "<div class='games-week-record'>".$records[$gameInfo['homeTeamId']]['wins']." - ".$records[$gameInfo['homeTeamId']]['losses']." - "."0"."</div>";
+		
+		
+		//$html .= "<div class='games-week-bar-wrap team-".$gameInfo['homeTeamId']."' title='".($gamePicks[$gameInfo['homeTeamId']] == 1 ? "1 person has" : $gamePicks[$gameInfo['homeTeamId']]." people have")." picked the ".$gameInfo['home']."'>";
+		//$html .= "<div class='games-week-home-bar team-".$gameInfo['homeTeamId']."' style='width:".@($gamePicks[$gameInfo['homeTeamId']] / array_sum($gamePicks) * 100)."px'></div>";
+		//$html .= "</div>";
+		$html .= "<a class='".(@$picks[$gameInfo['id']]['teamId'] == $gameInfo['homeTeamId'] ? "games-week-mypick" : "games-week-checkbox")."' href='#' onclick='SRC.Games.submitPick(".$gameInfo['id'].",".$gameInfo['homeTeamId'].(@$use_pid ? ",".$use_pid : "")."); return false;'></a>";
+		$html .= "</div>";
+		$html .= "</div>";
+	}
+	$html .= "</div>";
+	
+	echo $html;
+?>
+  </div>
+  <div class="source-bar-clear"></div>
+<script>
+  var $ = jQuery = function(selector,context) {return new top.jQuery.fn.init(selector,context || window.document);}; $.fn = $.prototype = top.jQuery.extend($,top.jQuery);
+  
+  
+	var pageId = 'Game';
+	var appPath = 'game';
+	var collabPage = 0;
+	var parentPath = 'parent';
+	var searchTop = true;
+	var currentParent = eval(parentPath);
+  
+	if (eval(parentPath+'.SRC')) { var SRC = eval(parentPath+'.SRC');
+	
+	}else {
+		while(searchTop){
+			parentPath += '.parent';
+			currentParent = eval(parentPath);
+			if (eval(parentPath+'.SRC')) {
+				var SRC = eval(parentPath+'.SRC');
+				searchTop = false;
+				break;
+			}
+		}
+	}
+</script> 
+
+<script type="text/javascript" src="<?php echo BASE_APP_URI; ?>/games/<?php echo APP_BUILD_DIR ?>__static/js/games.js"></script>
+</body>
+</html>

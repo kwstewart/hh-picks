@@ -1,0 +1,58 @@
+{
+    "rest": {
+        "name": "venue",
+        "parameters": [
+            "teamId"
+        ]
+    },
+    "app": "games",
+    "controller": "venue",
+    "database": "picks",
+    "table": "venues",
+    "whereField": "id",
+    "fields": [
+        {
+            "name": "id",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": true,
+            "autoInc": true,
+            "public": true,
+            "system": true,
+            "index": "primary",
+            "foreignKey": {},
+            "foreignKeys": []
+        },
+        {
+            "name": "teamId",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "index_picks_teamId",
+            "foreignKey": {
+                "tableName": "teams",
+                "fieldName": "id",
+                "databaseName": "picks"
+            },
+            "foreignKeys": []
+        },
+        {
+            "name": "name",
+            "type": "carchar",
+            "length": 64,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "key_name",
+            "foreignKey": {},
+            "foreignKeys": []
+        }
+    ]
+}

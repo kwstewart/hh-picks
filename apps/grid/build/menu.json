@@ -1,0 +1,89 @@
+{
+    "registration": "Games",
+    "items": [
+		{
+			"type": "group",
+			"label": "File",
+			"value": "file",
+			"items": [
+				{
+					"type": "item",
+					"label": "New",
+					"value": "new",
+					"pLevel": 2
+				},
+				{
+					"type": "item",
+					"label": "Open",
+					"value": "open",
+					"pLevel": 2
+				},
+				{
+					"type": "item",
+					"label": "Open Active",
+					"value": "open active",
+					"pLevel": 1
+				}
+			]
+		},
+{
+			"type": "group",
+			"label": "View",
+			"value": "view",
+			"items": [
+				{
+					"type": "item",
+					"label": "Projects",
+					"value": "projects",
+					"pLevel": 2
+				},{
+					"type": "item",
+					"label": "Campaigns",
+					"value": "campaigns",
+					"pLevel": 2
+				},{
+					"type": "item",
+					"label": "Documents",
+					"value": "documents",
+					"pLevel": 2
+				},
+				{
+					"type": "item",
+					"label": "News",
+					"value": "news",
+					"pLevel": 2
+				},
+				{
+					"type": "item",
+					"label": "Publish Schedule",
+					"value": "schedule",
+					"pLevel": 1
+				},
+{
+					"type": "item",
+					"label": "Wordpress Admin",
+					"value": "wordpress",
+					"pLevel": 1
+				},
+				{
+					"type": "item",
+					"label": "Quiz Engine",
+					"value": "quizEngine",
+					"pLevel": 1
+				}
+			]
+		},{
+			"type": "group",
+			"label": "Help",
+			"value": "help",
+			"items": [
+				{
+					"type": "item",
+					"label": "Report Bug",
+					"value": "report bug",
+					"pLevel": 2
+				}
+			]
+		}
+	]
+}

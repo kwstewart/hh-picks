@@ -1,0 +1,59 @@
+{
+    "includes": {
+        "css": [
+            {
+                "file": "grid.css"
+            }
+        ],
+        "js": [
+            {
+                "file": "grid.js"
+            }
+        ],
+        "html": [
+            {
+                "file": "grid.html"
+            },
+            {
+                "file": "admin.html"
+            },
+            {
+                "file": "widget.html"
+            }
+        ]
+    },
+    "admin": {
+        "permission": "1",
+        "groups": {
+            "allow": "true"
+        }
+    },
+    "internal": "true",
+    "registration": "Grid",
+    "path": "grid",
+    "url": "grid.html",
+    "preventDefault": "0",
+    "name": "Grid",
+    "defaultApp": "0",
+    "mainMenu": "0",
+    "loadCss": "0",
+    "isDefault": "0",
+    "collabApp": "0",
+    "widgetMenu": "0",
+    "initLoad": "0",
+    "adminTab": "0",
+    "sourceMenu": "1",
+    "fullscreen": "0",
+    "contentEnabled": "0",
+    "dashWidget": "1",
+    "active": "1",
+    "appIcon": "",
+    "icon": "",
+    "requiredApp": "Games",
+    "lazyLoad": "1",
+    "skipLoad": "0",
+    "type": "internal",
+    "defaultTab": "1",
+    "id": "55",
+    "hasMenu": "0"
+}

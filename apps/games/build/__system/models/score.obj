@@ -1,0 +1,97 @@
+{
+    "rest": {
+        "name": "score",
+        "parameters": [
+            "id"
+        ]
+    },
+    "app": "games",
+    "controller": "score",
+    "database": "picks",
+    "table": "scores",
+    "whereField": "id",
+    "fields": [
+        {
+            "name": "id",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": true,
+            "autoInc": true,
+            "public": true,
+            "system": true,
+            "index": "primary",
+            "foreignKey": {},
+            "foreignKeys": []
+        },
+        {
+            "name": "gameId",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "index_scores_gameId",
+            "foreignKey": {
+                "tableName": "games",
+                "fieldName": "id",
+                "databaseName": "picks"
+            },
+            "foreignKeys": []
+        },
+        {
+            "name": "awayScore",
+            "type": "int",
+            "length": 4,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": false,
+            "foreignKey": {},
+            "foreignKeys": []
+        },
+        {
+            "name": "homeScore",
+            "type": "int",
+            "length": 4,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": false,
+            "foreignKey": {},
+            "foreignKeys": []
+        },
+        {
+            "name": "gameState",
+            "type": "varchar",
+            "length": 16,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "key_scores_gameState",
+            "foreignKey": {},
+            "foreignKeys": []
+        },
+        {
+            "name": "gameTime",
+            "type": "varchar",
+            "length": 8,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": false,
+            "foreignKey": {},
+            "foreignKeys": []
+        }
+    ]
+}

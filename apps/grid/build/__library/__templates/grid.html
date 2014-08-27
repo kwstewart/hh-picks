@@ -1,0 +1,261 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>  
+
+<link rel="stylesheet" href="<?php echo BASE_URI; ?>/__static/css/global.css">
+<link rel="stylesheet" href="<?php echo BASE_URI; ?>/__static/css/source.css">
+<link rel="stylesheet" href="<?php echo BASE_APP_URI; ?>/games/<?php echo APP_BUILD_DIR ?>__static/css/games.css">
+
+</head>
+<body class="games-body">
+  <div class="games-wrap">
+<?php
+	
+	$user_preferencesControl = getApiController("source","user_preferences");
+	$gameControl = getApiController("games","game");
+	$pickControl = getApiController("games","pick");
+	$userControl = getApiController("source","user");
+	$scoreControl = getApiController("games","score");
+	
+	$season = 2013;
+	
+	// Keep track of users picks, by userId
+	$userPicks = array();
+	
+	$currentWeek = $gameControl->xDB->getRecord("season","week");
+	
+	//$currentWeek = "REG4";
+	
+	$userId = @$_GET['userId'];
+	$week = @$_GET['week'] ? $_GET['week'] : $currentWeek;
+	
+	
+	$html = "";
+		
+	if($userId) $html .= $userId."'s Picks";
+	elseif($week) $html .= weekBanner($week);
+	else { $html .= "My Picks"; $userId = $gameControl->me->id; }
+	
+	$html .= "<div id='picks-grid'>";
+	if($userId) {
+		$html .= "<div class='picks-grid-scores'>";
+		for($w = 1; $w <= $week; $w++) {
+			$weeksGames = $gameControl->get(array("formatted" => false, "__data" => array("year" => $season)));
+			
+			$html .= "<div class='picks-grid-user'>";
+			$html .= "<div class='picks-grid-week-num'><a href=\"?week=REG$w\">$w</a></div>";
+			$html .= $gameControl->buildGrid($weeksGames, $userId);
+			$html .= "<div class='picks-grid-clear'></div>";
+			$html .= "</div>";
+		}
+			$html .= "</div>";
+	}
+	else {
+	  // Get all the games for that week, along with the scores and picks
+		$games = $gameControl->get(array("verbose" => true, "formatted" => false, "__data" => array("week" => $week, "year" => $season)));
+		
+		
+	  // Get a list of all users names, by id
+	  $users = $userControl->xDB->query("SELECT userId, displayName FROM user_preferences","userId");
+	
+		// Rank users
+		$rank = array();
+		
+		$html .= "<div class='picks-grid-scores'>";
+		$html .= "<div class='picks-grid-header-game-box'></div>";
+		
+		// Width of the game div (used for calculating progress)
+		$divWidth = 60;
+		
+		foreach($games as $gameInfo) {
+
+		  
+			$html .= "<div class='picks-grid-header-game-box'>";
+			$html .= "<div class='picks-grid-game-qtr'>".($gameInfo['scores']['gameState'] == "final overtime" ? "Final OT" : $gameInfo['scores']['gameState'])."</div>";
+			//$html .= "<div class='picks-grid-game-time'>".$gameInfo['scores']['gameTime']."</div>";
+			$html .= "<div class='picks-grid-score'>";
+					  
+		  // Calculate the time left
+		  if(in_array($gameInfo['scores']['gameState'],array(1,2,3,4))) {
+		    $gameTimeArray = explode(":",$gameInfo['scores']['gameTime']);
+		    $gameTime = (900 * ($gameInfo['scores']['gameState'] - 1)) + (900 - ($gameTimeArray[0]) * 60) + (60 - ($gameTimeArray[1]* 60));
+		    $progress = $gameTime / 36;
+		    $html .= "<div class='picks-grid-game-progress' title='".$progress."%' style='width:".(($progress / 100) * $divWidth)."px' ></div>";
+		  }
+			
+			
+			$html .= "<div class='picks-grid-matchup'>";
+			$html .= "<img ".($gameInfo['awayTeamId'] == $gameInfo['winningTeamId'] ? "class='picks-grid-matchup-winner' " : "")."src='/apps/games/build/__static/img/helmets/".$gameInfo['awayTeamId']."_small.png'>";
+			$html .= "<img ".($gameInfo['homeTeamId'] == $gameInfo['winningTeamId'] ? "class='picks-grid-matchup-winner' " : "")."src='/apps/games/build/__static/img/helmets/".$gameInfo['homeTeamId']."_small.png'>";
+			$html .= "</div>";
+			$html .= $gameInfo['scores']['awayScore']." - "." ".$gameInfo['scores']['homeScore'];	
+			$html .= "</div>";
+			$html .= "</div>";
+			
+			// Loop through each pick for this game
+		  foreach($gameInfo['picks'] as $pickInfo) {
+		    
+		    // Save the users pick
+		    $userPicks[$pickInfo['userId']][$gameInfo['id']] = $pickInfo;
+		    
+		    // If the user isn't ranked yet, set them at 0
+			  if(!@$rank[$pickInfo['userId']]) $rank[$pickInfo['userId']] = 0;
+			  
+			  // Game is finished as user picked correct, up rank user
+				if($gameInfo['winningTeamId'] == $pickInfo['teamId']) $rank[$pickInfo['userId']]++;
+				
+				// User picked winning Away team, up rank user
+				elseif($gameInfo['scores']['awayScore'] > $gameInfo['scores']['awayScore'] && $pickInfo['teamId'] == $gameInfo['awayTeamid']) $rank[$pickInfo['userId']]++;
+				
+				// User picked winning Home team, up rank user
+				elseif($gameInfo['scores']['awayScore'] < $gameInfo['scores']['awayScore'] && $pickInfo['teamId'] == $gameInfo['homeTeamid']) $rank[$pickInfo['userId']]++;
+				
+			  // Don't give user any points if they don't match above criteria
+		    
+		  }
+			
+			
+			
+		}
+		$html .= "<div class='picks-grid-points'>".($gameInfo['scores']['awayScore'] + $gameInfo['scores']['homeScore'])."</div>";
+		$html .= "</div>";
+		
+		arsort($rank);
+		echo "<!-- Rank: ".json_encode($rank)." -->\n";
+		// Rank again by tie breaker
+		/*
+		foreach($rank as $userId => $rankPoints) {
+			$mnfp = $gameInfo['scores']['awayScore'] + $gameInfo['scores']['homeScore'];
+			$rank[$userId] += (100 - abs($mnfp - @$GLOBALS['users'][$userId]['picks'][$gameInfo['gid']]['score'])) / 100;
+			//echo "<p>uid: [$userId] | rank: [".$rank[$userId]." | (100 - abs(".$mnfp." - ".@$GLOBALS['users'][$userId]['picks'][$gameInfo['gid']]['score'].")) / 100</p>";
+		}
+		arsort($rank);
+		*/
+    
+    // Loop through each user by rank
+		foreach(array_keys($rank) as $rUserId) {			
+		  
+			
+			$html .= "<div class='picks-grid-user ".($rUserId == @$gameControl->me->id ? "picks-grid-me" : "")."'>";
+			$html .= "<div class='picks-grid-user-box'>";
+			$html .= "<div class='picks-grid-user-name'><a href=\"?uid=$rUserId\">".$users[$rUserId]['displayName']."</a></div>";
+			$html .= "<div class='picks-grid-user-img'><img src='".BASE_URI."core/users/".$rUserId."/avatar/24.jpg?t=".time()."'/></div>";
+			$html .= "<div class='picks-grid-user-rank'>";
+			$html .= "</div>";
+			$html .= "</div>";
+			
+			
+			// Loop through each game
+			foreach($games as $gameInfo) {
+			  
+			  // If the game hasnt started
+			  if($gameInfo['scores']['gameState'] == "Pregame") {
+			    
+			    // If the 
+			    $gameClass = ""; 
+			    
+			  }
+			  // Else if the game is over
+			  elseif($gameInfo['winningTeamId'] > 0) {
+			    
+			    // If the user picked this team
+			    if($userPicks[$rUserId][$gameInfo['id']]['teamId'] == $gameInfo['winningTeamId']) $gameClass = "picks-grid-game-correct";
+			    
+			    // Otherwise they picked the wrong team
+			    else $gameClass = "picks-grid-game-wrong";
+			    
+			  }
+			  
+			  // Else if the game is still going
+			  elseif($gameInfo['winningTeamId'] == null) {
+			    
+			    // If the game is tied
+			    if($gameInfo['scores']['awayScore'] == $gameInfo['scores']['homeScore']) $gameClass = "picks-grid-game-locked";
+			    
+			    // Else if the away team is winning and they picked the away team, set as winning
+			    elseif($gameInfo['scores']['awayScore'] > $gameInfo['scores']['homeScore'] && $userPicks[$rUserId][$gameInfo['id']]['teamId'] == $gameInfo['awayTeamId']) $gameClass = "picks-grid-game-winning";
+			    
+			    // Else if the home team is winning and they picked the home team, set as winning
+			    elseif($gameInfo['scores']['awayScore'] < $gameInfo['scores']['homeScore'] && $userPicks[$rUserId][$gameInfo['id']]['teamId'] == $gameInfo['homeTeamId']) $gameClass = "picks-grid-game-winning";
+			    
+			    // Otherwise set as losing
+			    else $gameClass = "picks-grid-game-losing"; 
+			  }
+			  
+			  // Otherwise the game is a tie, no one wins
+			  else $gameClass = "picks-grid-game-wrong";
+			  
+			  $html .= "<div class='gid-".$gameInfo['id']." picks-grid-game ".$gameClass."' state='".$gameInfo['scores']['gameState']."' title='".$gameInfo['scores']['awayScore']." - ".$gameInfo['scores']['homeScore']."'>";
+			  $html .= "<div class='picks-grid-game-overlay'>";
+			  $html .= "<img tid='".@$userPicks[$rUserId][$gameInfo['id']]['teamId']."' class='picks-grid-game-helmet' src='/apps/games/build/__static/img/helmets/".(@$userPicks[$rUserId][$gameInfo['id']]['teamId'] ? $userPicks[$rUserId][$gameInfo['id']]['teamId'] : 0)."_small.png'>";			
+			  $html .= "</div>";
+			  $html .= "</div>";			  
+			  
+			}
+			
+			// Add the user's points for the last game
+			$html .= "<div class='picks-grid-game' title='".$gameInfo['scores']['awayScore']." - ".$gameInfo['scores']['homeScore']."'>".@$userPicks[$rUserId][$gameInfo['id']]['score']."</div>";
+			
+			$html .= "<div class='picks-grid-clear'></div>";
+			$html .= "</div>";
+		}
+	}
+	$html .= "</div>";
+	
+	$html .= "<script>var uid = ".$gameControl->me->id.";</script>";
+	echo $html;
+
+	
+	function weekBanner($week) {
+		$html = "<div id='picks-grid-week-banner'>";
+		$html .= "<div class='picks-grid-row-start'>Week</div>";
+		
+		for($w = 1; $w <= 17; $w++) {
+			$html .= "<div class='picks-grid-week-num".("REG".$w == $week ? " picks-grid-week-view" : "")."'>";
+			if($w != $week) $html .= "<a href='#' onclick='SRC.Grid.changeWeek(".$w."); return false;'>$w</a>";
+			else $html .= $w;
+			$html .= "</div>";
+			
+			//if($w == $currWeek) break;
+		}
+		
+		$html .= "</div>";
+		
+		return $html;
+	}
+?>
+  </div>
+  <div class="source-bar-clear"></div>
+<script>
+  var $ = jQuery = function(selector,context) {return new top.jQuery.fn.init(selector,context || window.document);}; $.fn = $.prototype = top.jQuery.extend($,top.jQuery);
+  
+  
+	var pageId = 'Picks';
+	var appPath = 'game';
+	var collabPage = 0;
+	var parentPath = 'parent';
+	var searchTop = true;
+	var currentParent = eval(parentPath);
+  
+	if (eval(parentPath+'.SRC')) { var SRC = eval(parentPath+'.SRC');
+	
+	}else {
+		while(searchTop){
+			parentPath += '.parent';
+			currentParent = eval(parentPath);
+			if (eval(parentPath+'.SRC')) {
+				var SRC = eval(parentPath+'.SRC');
+				searchTop = false;
+				break;
+			}
+		}
+	}
+	
+</script> 
+
+<script type="text/javascript" src="<?php echo BASE_APP_URI; ?>/grid/<?php echo APP_BUILD_DIR ?>__static/js/grid.js"></script>
+<script>SRC.Grid.DOCUMENT.find("body").gs_loadingMini("end");</script>
+</body>
+</html>

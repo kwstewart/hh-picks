@@ -1,0 +1,96 @@
+{
+    "rest": {
+        "name": "team",
+        "parameters": [
+            "id"
+        ]
+    },
+    "app": "games",
+    "controller": "team",
+    "database": "picks",
+    "table": "teams",
+    "whereField": "id",
+    "fields": [
+        {
+            "name": "id",
+            "type": "int",
+            "length": 11,
+            "value": false,
+            "unique": true,
+            "autoInc": true,
+            "public": true,
+            "system": true,
+            "index": "primary",
+            "foreignKey": {},
+            "foreignKeys": [
+                {
+                    "controllerName": "game",
+                    "tableName": "games",
+                    "fieldName": "awayTeamId",
+                    "single": true,
+                    "databaseName": "picks"
+                },
+                {
+                    "controllerName": "game",
+                    "tableName": "games",
+                    "fieldName": "homeTeamId",
+                    "single": true,
+                    "databaseName": "picks"
+                },
+                {
+                    "controllerName": "pick",
+                    "tableName": "picks",
+                    "fieldName": "teamId",
+                    "single": true,
+                    "databaseName": "picks"
+                },                
+                {
+                    "controllerName": "venue",
+                    "tableName": "venues",
+                    "fieldName": "teamId",
+                    "single": true,
+                    "databaseName": "picks"
+                }
+             ]
+        },
+        {
+            "name": "city",
+            "type": "varchar",
+            "length": 45,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "key_city",
+            "foreignKey": {},
+            "foreignKeys": []
+        },
+        {
+            "name": "name",
+            "type": "varchar",
+            "length": 16,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "key_name",
+            "foreignKey": {},
+            "foreignKeys": []
+        },
+        {
+            "name": "abbr",
+            "type": "varchar",
+            "length": 4,
+            "value": false,
+            "unique": false,
+            "autoInc": false,
+            "public": true,
+            "system": true,
+            "index": "key_abbr",
+            "foreignKey": {},
+            "foreignKeys": []
+        }
+    ]
+}

@@ -1,0 +1,47 @@
+{
+    "includes": {
+        "js": [
+            {
+                "file": "games.js"
+            }
+        ],
+        "html": [
+            {
+                "file": "games.html"
+            }
+        ]
+    },
+    "admin": {
+        "permission": "0",
+        "groups": {
+            "allow": "true"
+        }
+    },
+    "internal": "true",
+    "registration": "Games",
+    "path": "games",
+    "url": "games.html",
+    "preventDefault": "0",
+    "name": "Games",
+    "defaultApp": "0",
+    "mainMenu": "0",
+    "loadCss": "0",
+    "isDefault": "0",
+    "collabApp": "0",
+    "widgetMenu": "0",
+    "initLoad": "1",
+    "adminTab": "1",
+    "sourceMenu": "1",
+    "fullscreen": "0",
+    "contentEnabled": "0",
+    "dashWidget": "1",
+    "active": "1",
+    "appIcon": "",
+    "icon": "",
+    "lazyLoad": "1",
+    "skipLoad": "0",
+    "type": "internal",
+    "defaultTab": "1",
+    "id": "54",
+    "hasMenu": "0"
+}
