@@ -4,6 +4,7 @@ class scoreControl extends baseController {
   
   public function get__before($args = array()) {
    
+   	
     // Only update the scores when requested
     if(@$this->__data['update']) {
       
@@ -16,13 +17,23 @@ class scoreControl extends baseController {
 	    // Check if the week is current	    
 	    if($week != $this->xDB->getRecord("season","week")) $this->xDB->query("UPDATE season SET week = '".$week."'");
 	
+	    // For getting the date when inserting records
+	    $daysOfWeek = array(
+	    	"Tue" => 0,
+	    	"Wed" => 1,
+	    	"Thu" => 2,
+	    	"Fri" => 3,
+	    	"Sat" => 4,
+	    	"Sun" => 5,
+	    	"Mon" => 6
+	    );
+	    $currDate = 0;
 	    
 	    // Load the game controller
 	    $gameControl = getApiController("games","game");
 	    
 	    // Loop through each score
 	    foreach($scores as $feedInfo) {
-	      
 	      
 	      // Get a list of teams by their abbr
 	      $abbrList = $this->xDB->query("SELECT id, abbr FROM teams","abbr");
@@ -32,8 +43,38 @@ class scoreControl extends baseController {
 	      $homeTeamId = $abbrList[$feedInfo[6]]['id'];
 	      
 	      
-	      // Find the matching game and score in the database
-	      $gameId = $this->xDB->getRecord("games","id","year = ".$feedInfo[13]." AND awayTeamId = ".$awayTeamId." AND homeTeamId = ".$homeTeamId);
+	      // Find the matching game and score in the database, if it doesn't exist add it
+	      if(!$gameId = $this->xDB->getRecord("games","id","year = ".$feedInfo[13]." AND awayTeamId = ".$awayTeamId." AND homeTeamId = ".$homeTeamId)) {
+	      	
+	      	$insertInfo = array(
+	      		"awayTeamId" => $awayTeamId,
+	      		"homeTeamId" => $homeTeamId,
+	      		"venueId" => $homeTeamId,
+	      		"week" => $feedInfo[12],
+	      		"year" => $feedInfo[13]
+	      	);
+	      	
+	      	if(!$currDate) {
+	      		// Get the current date of today at midnight
+	      		$currDate = strtotime(date("m/d/y",time()));
+	      		$currDayOfWeek = date("D",time());
+	      	}
+	      	
+	      	$dayOffset = $daysOfWeek[$feedInfo[0]] - $daysOfWeek[$currDayOfWeek];
+	      	
+	      	// Number of seconds past midnight for the game (all times are PM)
+	      	$secondsInDay = strtotime("Jan 1 1970 ".$feedInfo[1]. date("T",time())) + date("Z",time()) + 43200;
+	      	
+	      	// Parse date into timestamp
+	      	$insertInfo['startTime'] = $currDate + $secondsInDay + ($dayOffset * 86400);
+	      	
+	      	$gameId = $gameControl->xDB->insertIntoTable("picks.games",$insertInfo);
+	      
+		      // Add to scores table
+		      $insertInfo = array("gameId" => $gameId);
+		      $this->xDB->insertIntoTable("picks.scores",$insertInfo);
+	      }
+	      
 	      $scoreInfo = $this->xDB->getRecord("scores","*","gameId = ".$gameId);
 	      
 	      // If this score is already stored as a final, skip
@@ -51,8 +92,8 @@ class scoreControl extends baseController {
 	      // Update the scores table
 	      $this->xDB->updateTable("scores",$updateArray,"gameId");
 	      
-	      // If the game is in final, update the winning team in the game table
-	      if(substr(strtolower($feedInfo[2]),0,5) == "final") {
+	      // If the game is in final and not in PREseason, update the winning team in the game table
+	      if(substr(strtolower($feedInfo[2]),0,5) == "final" && substr($week,0,3) != "PRE") {
 	       
 	        // Calculate the winning team
 	        if($updateArray['awayScore'] > $updateArray['homeScore']) { 
