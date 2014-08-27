@@ -85,7 +85,7 @@
 .picks-grid-week-num a { }
 .picks-grid-scores { clear:both; color:#fff; }
 .picks-grid-score { -moz-border-radius:5px; -webkit-border-radius:5px; border:1px solid #000; background-color:#ddd; border-radius:5px; float:left; padding:2px; text-align:center; width:60px; color:#000; position:relative; }
-.picks-grid-game-progress { background-color: #FFC001; border-radius: 5px 5px 5px 5px; height: 100%; left: 0; opacity: 0.6; position: absolute; top: 0; }
+.picks-grid-game-progress { background-color: #FFC001; border-radius: 5px 5px 5px 5px; height: 100%; left: 0; opacity: 0.3; position: absolute; top: 0; }
 .picks-grid-matchup img { width: 30px; }
 img.picks-grid-matchup-winner { background-color:#45fd1b; } 
 .picks-grid-header-game-box { float:left; width:60px; }
@@ -122,4 +122,4 @@ img.picks-grid-matchup-winner { background-color:#45fd1b; }
     filter: flipv; /*IE*/
 }
 
-.source-bar-clear { padding-bottom:30px; }
+.source-bar-clear { clear:both; padding-bottom:30px; }

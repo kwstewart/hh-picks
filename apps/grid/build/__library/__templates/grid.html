@@ -80,11 +80,17 @@
 		  // Calculate the time left
 		  if(in_array($gameInfo['scores']['gameState'],array(1,2,3,4))) {
 		    $gameTimeArray = explode(":",$gameInfo['scores']['gameTime']);
-		    $gameTime = (900 * ($gameInfo['scores']['gameState'] - 1)) + (900 - ($gameTimeArray[0]) * 60) + (60 - ($gameTimeArray[1]* 60));
+		    $gameTime = (900 * ($gameInfo['scores']['gameState'] - 1)) + (900 - ($gameTimeArray[0]) * 60) + (60 - ($gameTimeArray[1]));
 		    $progress = $gameTime / 36;
 		    $html .= "<div class='picks-grid-game-progress' title='".$progress."%' style='width:".(($progress / 100) * $divWidth)."px' ></div>";
 		  }
-			
+			// If its halftime, set the width
+			if($gameInfo['scores']['gameState'] == "Halftime") {
+			 
+			 // Set the progress at 50% 
+			 $progress = 50;
+			 $html .= "<div class='picks-grid-game-progress' title='".$progress."%' style='width:".(($progress / 100) * $divWidth)."px' ></div>";
+			}
 			
 			$html .= "<div class='picks-grid-matchup'>";
 			$html .= "<img ".($gameInfo['awayTeamId'] == $gameInfo['winningTeamId'] ? "class='picks-grid-matchup-winner' " : "")."src='/apps/games/build/__static/img/helmets/".$gameInfo['awayTeamId']."_small.png'>";
@@ -119,8 +125,10 @@
 			
 			
 		}
-		$html .= "<div class='picks-grid-points'>".($gameInfo['scores']['awayScore'] + $gameInfo['scores']['homeScore'])."</div>";
-		$html .= "</div>";
+		if(@$gameInfo) {
+			$html .= "<div class='picks-grid-points'>".($gameInfo['scores']['awayScore'] + $gameInfo['scores']['homeScore'])."</div>";
+			$html .= "</div>";
+		}
 		
 		arsort($rank);
 		echo "<!-- Rank: ".json_encode($rank)." -->\n";
@@ -161,7 +169,7 @@
 			  elseif($gameInfo['winningTeamId'] > 0) {
 			    
 			    // If the user picked this team
-			    if($userPicks[$rUserId][$gameInfo['id']]['teamId'] == $gameInfo['winningTeamId']) $gameClass = "picks-grid-game-correct";
+			    if(@$userPicks[$rUserId][$gameInfo['id']]['teamId'] == $gameInfo['winningTeamId']) $gameClass = "picks-grid-game-correct";
 			    
 			    // Otherwise they picked the wrong team
 			    else $gameClass = "picks-grid-game-wrong";
@@ -214,7 +222,7 @@
 		
 		for($w = 1; $w <= 17; $w++) {
 			$html .= "<div class='picks-grid-week-num".("REG".$w == $week ? " picks-grid-week-view" : "")."'>";
-			if($w != $week) $html .= "<a href='#' onclick='SRC.Grid.changeWeek(".$w."); return false;'>$w</a>";
+			if($w != $week) $html .= "<a href='#' onclick='SRC.Grid.changeWeek(\"REG".$w."\"); return false;'>$w</a>";
 			else $html .= $w;
 			$html .= "</div>";
 			
@@ -253,9 +261,14 @@
 		}
 	}
 	
+	
 </script> 
 
 <script type="text/javascript" src="<?php echo BASE_APP_URI; ?>/grid/<?php echo APP_BUILD_DIR ?>__static/js/grid.js"></script>
-<script>SRC.Grid.DOCUMENT.find("body").gs_loadingMini("end");</script>
+<script>
+  SRC.Grid.DOCUMENT.find("body").gs_loadingMini("end"); 
+  SRC.Grid.currentWeek = "<?php echo $currentWeek ?>";
+  SRC.Grid.selectedWeek = "<?php echo $week ?>";
+</script>
 </body>
 </html>
