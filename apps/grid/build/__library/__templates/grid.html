@@ -132,7 +132,6 @@
 		}
 		
 		arsort($rank);
-		echo "<!-- Rank: ".json_encode($rank)." -->\n";
 		// Rank again by tie breaker
 		/*
 		foreach($rank as $userId => $rankPoints) {
@@ -155,10 +154,8 @@
 			$html .= "</div>";
 			$html .= "</div>";
 			
-			echo "<!-- ************ GAME INFOS: ************ -->";
 			// Loop through each game
 			foreach($games as $gameInfo) {
-			  echo "<!--".json_encode($gameInfo)."-->\n";
 			  // If the game hasnt started
 			  if($gameInfo['scores']['gameState'] == "Pregame") {
 			    
