@@ -157,7 +157,7 @@
 			
 			// Loop through each game
 			foreach($games as $gameInfo) {
-			  
+			  echo "<!--".json_encode($gameInfo)."-->\n";
 			  // If the game hasnt started
 			  if($gameInfo['scores']['gameState'] == "Pregame") {
 			    
@@ -183,10 +183,10 @@
 			    if($gameInfo['scores']['awayScore'] == $gameInfo['scores']['homeScore']) $gameClass = "picks-grid-game-locked";
 			    
 			    // Else if the away team is winning and they picked the away team, set as winning
-			    elseif($gameInfo['scores']['awayScore'] > $gameInfo['scores']['homeScore'] && $userPicks[$rUserId][$gameInfo['id']]['teamId'] == $gameInfo['awayTeamId']) $gameClass = "picks-grid-game-winning";
+			    elseif($gameInfo['scores']['awayScore'] > $gameInfo['scores']['homeScore'] && @$userPicks[$rUserId][$gameInfo['id']]['teamId'] == $gameInfo['awayTeamId']) $gameClass = "picks-grid-game-winning";
 			    
 			    // Else if the home team is winning and they picked the home team, set as winning
-			    elseif($gameInfo['scores']['awayScore'] < $gameInfo['scores']['homeScore'] && $userPicks[$rUserId][$gameInfo['id']]['teamId'] == $gameInfo['homeTeamId']) $gameClass = "picks-grid-game-winning";
+			    elseif($gameInfo['scores']['awayScore'] < $gameInfo['scores']['homeScore'] && @$userPicks[$rUserId][$gameInfo['id']]['teamId'] == $gameInfo['homeTeamId']) $gameClass = "picks-grid-game-winning";
 			    
 			    // Otherwise set as losing
 			    else $gameClass = "picks-grid-game-losing"; 
