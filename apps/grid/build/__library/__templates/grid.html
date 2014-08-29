@@ -109,17 +109,27 @@
 		    // If the user isn't ranked yet, set them at 0
 			  if(!@$rank[$pickInfo['userId']]) $rank[$pickInfo['userId']] = 0;
 			  
+			  
+			  echo "<!--rank: ".json_encode($rank)." ";
+			  echo "winningTeamId: ".$gameInfo['winningTeamId']." ";
+			  echo "pickedTeamId: ".$pickInfo['teamId']." ";
+			  echo "awayTeamId: ".$gameInfo['awayTeamId']." ";
+			  echo "homeTeamId: ".$gameInfo['homeTeamId']." ";
+			  echo "awayScore: ".$gameInfo['scores']['awayScore']." ";
+			  echo "homeScore: ".$gameInfo['scores']['homeScore']."";
+			  
 			  // Game is finished as user picked correct, up rank user
 				if($gameInfo['winningTeamId'] == $pickInfo['teamId']) $rank[$pickInfo['userId']]++;
 				
 				// User picked winning Away team, up rank user
-				elseif($gameInfo['scores']['awayScore'] > $gameInfo['scores']['awayScore'] && $pickInfo['teamId'] == $gameInfo['awayTeamid']) $rank[$pickInfo['userId']]++;
+				elseif($gameInfo['scores']['awayScore'] > $gameInfo['scores']['homeScore'] && $pickInfo['teamId'] == $gameInfo['awayTeamId']) $rank[$pickInfo['userId']]++;
 				
 				// User picked winning Home team, up rank user
-				elseif($gameInfo['scores']['awayScore'] < $gameInfo['scores']['awayScore'] && $pickInfo['teamId'] == $gameInfo['homeTeamid']) $rank[$pickInfo['userId']]++;
+				elseif($gameInfo['scores']['homeScore'] > $gameInfo['scores']['awayScore'] && $pickInfo['teamId'] == $gameInfo['homeTeamId']) $rank[$pickInfo['userId']]++;
 				
 			  // Don't give user any points if they don't match above criteria
 		    
+			   echo "<!--rank: ".json_encode($rank)."-->\n";
 		  }
 			
 			
