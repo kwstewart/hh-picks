@@ -110,14 +110,6 @@
 			  if(!@$rank[$pickInfo['userId']]) $rank[$pickInfo['userId']] = 0;
 			  
 			  
-			  echo "<!--rank: ".json_encode($rank)." ";
-			  echo "winningTeamId: ".$gameInfo['winningTeamId']." ";
-			  echo "pickedTeamId: ".$pickInfo['teamId']." ";
-			  echo "awayTeamId: ".$gameInfo['awayTeamId']." ";
-			  echo "homeTeamId: ".$gameInfo['homeTeamId']." ";
-			  echo "awayScore: ".$gameInfo['scores']['awayScore']." ";
-			  echo "homeScore: ".$gameInfo['scores']['homeScore']."";
-			  
 			  // Game is finished as user picked correct, up rank user
 				if($gameInfo['winningTeamId'] == $pickInfo['teamId']) $rank[$pickInfo['userId']]++;
 				
@@ -129,7 +121,6 @@
 				
 			  // Don't give user any points if they don't match above criteria
 		    
-			   echo "<!--rank: ".json_encode($rank)."-->\n";
 		  }
 			
 			
@@ -164,7 +155,7 @@
 			$html .= "</div>";
 			$html .= "</div>";
 			
-			
+			echo "<!-- ************ GAME INFOS: ************ -->";
 			// Loop through each game
 			foreach($games as $gameInfo) {
 			  echo "<!--".json_encode($gameInfo)."-->\n";
